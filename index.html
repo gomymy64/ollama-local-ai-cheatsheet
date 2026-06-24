@@ -1,0 +1,309 @@
+<!doctype html><html lang="ru"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Материалы к Уроку Локальный ИИ (Ollama) | Мастодонт</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0a0b;--bg2:#121214;--card:#161618;--line:#26262b;--ink:#f3f1ea;--mut:#9a9aa3;--dim:#6a6a72;
+--a1:#F2DB82;--a2:#E0973C;--grad:linear-gradient(90deg,#F2DB82,#E0973C);--mono:'JetBrains Mono',monospace}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:'Manrope',sans-serif;line-height:1.6;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+background:radial-gradient(600px 400px at 12% 0%,rgba(242,219,130,.07),transparent),radial-gradient(600px 500px at 90% 20%,rgba(224,151,60,.06),transparent)}
+body::after{content:"";position:fixed;inset:0;z-index:9999;pointer-events:none;opacity:.025;
+background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+::selection{background:var(--a1);color:#000}
+::-webkit-scrollbar{width:10px}::-webkit-scrollbar-track{background:#0a0a0b}::-webkit-scrollbar-thumb{background:var(--grad);border-radius:6px}
+a{color:inherit}
+.wrap{max-width:1080px;margin:0 auto;padding:0 22px;position:relative;z-index:1}
+
+/* nav */
+.nav{position:sticky;top:0;z-index:100;background:rgba(10,10,11,.82);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.nav::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:1px;background:linear-gradient(90deg,transparent,var(--a1),var(--a2),transparent)}
+.nav .in{max-width:1080px;margin:0 auto;padding:14px 22px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{font-family:'Russo One';font-size:19px;letter-spacing:.04em}
+.brand b{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.nav .links{display:flex;gap:8px;flex-wrap:wrap}
+.nav .links a{font-size:13px;font-weight:600;color:var(--mut);text-decoration:none;padding:7px 13px;border:1px solid var(--line);border-radius:30px;transition:.2s}
+.nav .links a:hover{color:var(--ink);border-color:var(--a2)}
+
+/* hero */
+.hero{padding:80px 0 60px;text-align:center}
+.badge{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.22em;color:var(--a1);border:1px solid var(--line);border-radius:30px;padding:8px 18px;text-transform:uppercase}
+h1{font-family:'Russo One';font-size:clamp(30px,5.5vw,56px);line-height:1.08;margin:24px 0 18px;letter-spacing:.01em}
+h1 .g{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{color:var(--mut);font-size:clamp(15px,1.7vw,19px);max-width:680px;margin:0 auto}
+.ytbar{margin-top:34px;display:inline-flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 22px}
+.ytbar .yt{display:inline-flex;align-items:center;gap:10px;background:#ff0033;color:#fff;font-weight:700;font-size:14px;padding:11px 20px;border-radius:10px;text-decoration:none;transition:.2s}
+.ytbar .yt:hover{filter:brightness(1.12);transform:translateY(-1px)}
+.ytbar span{color:var(--mut);font-size:14px}
+
+section{padding:46px 0;position:relative}
+.h2{font-family:'Russo One';font-size:clamp(22px,3.4vw,32px);margin-bottom:28px;display:flex;align-items:center;gap:12px}
+.h2::before{content:"";width:34px;height:4px;background:var(--grad);border-radius:3px}
+
+/* learn cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.lc{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px;position:relative;overflow:hidden}
+.lc::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--grad)}
+.lc .i{font-size:26px;margin-bottom:12px}
+.lc h3{font-size:17px;font-weight:800;margin-bottom:6px}
+.lc p{color:var(--mut);font-size:14px}
+
+/* tools */
+.tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.tool{display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;text-decoration:none;transition:.2s}
+.tool:hover{border-color:var(--a2);transform:translateY(-2px)}
+.tool .ic{width:42px;height:42px;border-radius:11px;background:#1d1d20;display:flex;align-items:center;justify-content:center;font-size:20px;flex:none}
+.tool .nm{font-weight:700;font-size:15px}
+.tool .ds{color:var(--mut);font-size:12.5px}
+.tool .pill{margin-left:auto;font-size:11px;font-weight:700;color:#0a0a0b;background:var(--a1);padding:4px 10px;border-radius:20px;flex:none}
+
+/* steps */
+.step{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:30px;margin-bottom:18px;position:relative;overflow:hidden}
+.step::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--grad)}
+.step::after{content:"";position:absolute;top:-40px;right:-40px;width:140px;height:140px;background:radial-gradient(circle,rgba(242,219,130,.10),transparent 70%);pointer-events:none}
+.step .num{font-family:'Russo One';font-size:46px;line-height:1;background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;opacity:.9}
+.step h3{font-size:21px;font-weight:800;margin:6px 0 12px}
+.step .desc{color:var(--mut);font-size:15px;margin-bottom:16px}
+.act{list-style:none;margin:0 0 6px}
+.act li{padding:6px 0 6px 22px;position:relative;font-size:14.5px;color:#d9d7cf}
+.act li::before{content:"▸";position:absolute;left:0;color:var(--a1)}
+.tip{margin-top:14px;background:rgba(242,219,130,.06);border-left:3px solid var(--a1);border-radius:0 10px 10px 0;padding:12px 16px;font-size:14px;color:#e6e3d8}
+.tip b{color:var(--a1)}
+
+/* prompt + code blocks */
+.pb{margin-top:16px;background:#0c0c0e;border:1px solid var(--line);border-left:3px solid var(--a2);border-radius:0 12px 12px 0;padding:16px 18px;box-shadow:0 8px 30px -12px rgba(224,151,60,.25)}
+.pb .lbl{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.pb .lbl span{font-size:12px;font-weight:700;letter-spacing:.08em;color:var(--a1)}
+.pb .txt{font-family:var(--mono);font-size:13.5px;color:#e9e7df;white-space:pre-wrap;line-height:1.75}
+.pb.cmd .txt{color:#9fe0b0}
+.cp{font-size:12px;font-weight:700;color:#0a0a0b;background:var(--a1);border:0;border-radius:8px;padding:7px 13px;cursor:pointer;transition:.2s;flex:none}
+.cp:hover{filter:brightness(1.1)}
+.cp.ok{background:#3ddc84}
+
+/* memory table */
+.mt{margin-top:14px;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.mt .r{display:grid;grid-template-columns:.8fr 1.6fr .7fr;gap:12px;padding:12px 18px;border-top:1px solid var(--line);font-size:14px;align-items:center}
+.mt .r:first-child{border-top:0;color:var(--dim);font-size:12px;letter-spacing:.1em;text-transform:uppercase}
+.mt .r b{color:var(--a1);font-weight:700}
+.mt .r.sw{background:rgba(242,219,130,.06)}
+
+/* all links */
+.lg{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.lk{display:flex;align-items:center;gap:13px;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;text-decoration:none;transition:.2s}
+.lk:hover{border-color:var(--a2);transform:translateY(-2px)}
+.lk .ic{font-size:20px}.lk .nm{font-weight:700;font-size:14.5px}.lk .u{color:var(--a2);font-size:12.5px;font-family:var(--mono)}
+
+/* CTA */
+.cta{position:relative;background:var(--bg2);border:1px solid var(--line);border-radius:22px;padding:38px;overflow:hidden;animation:glow 3s ease-in-out infinite alternate}
+@keyframes glow{to{box-shadow:0 0 50px -20px rgba(242,219,130,.4)}}
+.cta::before,.cta::after{content:"";position:absolute;width:200px;height:200px;border-radius:50%;pointer-events:none}
+.cta::before{top:-80px;left:-60px;background:radial-gradient(circle,rgba(242,219,130,.14),transparent 70%)}
+.cta::after{bottom:-80px;right:-60px;background:radial-gradient(circle,rgba(224,151,60,.14),transparent 70%)}
+.cta h2{font-family:'Russo One';font-size:clamp(22px,3.6vw,34px);text-transform:uppercase;line-height:1.12;position:relative}
+.cta h2 .g{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.cta .two{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin:26px 0;position:relative}
+.cta .two h4{font-size:12px;letter-spacing:.16em;color:var(--mut);text-transform:uppercase;margin-bottom:12px}
+.cta .two li{list-style:none;font-size:14.5px;padding:7px 0;color:#e2dfd5}
+.cta .bot{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;position:relative}
+.cta .bot .free{font-size:17px;font-weight:700}.cta .bot .free b{color:var(--a1)}
+.cta .go{font-family:'Russo One';font-size:15px;color:#0a0a0b;background:var(--grad);padding:15px 28px;border-radius:12px;text-decoration:none;transition:.2s}
+.cta .go:hover{filter:brightness(1.08);transform:translateY(-2px)}
+
+footer{text-align:center;padding:50px 22px 40px;border-top:1px solid var(--line);margin-top:40px}
+footer .b{font-family:'Russo One';font-size:20px}
+footer .b span{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+footer p{color:var(--dim);font-size:13px;margin-top:8px}
+footer a{color:var(--a2);font-size:13px;text-decoration:none;cursor:pointer}
+@media(max-width:680px){.cta .two{grid-template-columns:1fr}.mt .r{grid-template-columns:1fr;gap:4px}.step{padding:22px}}
+</style></head><body>
+
+<nav class="nav"><div class="in">
+  <div class="brand"><b>МАСТОДОНТ</b></div>
+  <div class="links"><a href="#tools">Инструменты</a><a href="#steps">Шаги</a><a href="#links">Ссылки</a></div>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+  <div class="badge">Материалы к уроку</div>
+  <h1>Запусти самый мощный ИИ <span class="g">локально</span> — бесплатно и без лимитов</h1>
+  <p>Ставим Ollama, запускаем модель прямо на своём ПК и поднимаем локальный клон NotebookLM. Без подписок, оффлайн, приватно.</p>
+  <div class="ytbar">
+    <a class="yt" href="https://youtu.be/qCGPtt6J4Vc" target="_blank">▶ Смотреть видео</a>
+    <span>Повтори всё по шагам из этой шпаргалки</span>
+  </div>
+</div></header>
+
+<section><div class="wrap">
+  <div class="h2">Что ты научишься делать</div>
+  <div class="cards">
+    <div class="lc"><div class="i">🖥️</div><h3>Запускать ИИ локально</h3><p>Мощные модели прямо на своём ПК — бесплатно, оффлайн, приватно. Их у тебя уже не отнимут.</p></div>
+    <div class="lc"><div class="i">🎯</div><h3>Подбирать модель под железо</h3><p>Claude сам подскажет, какая модель пойдёт на твоём компе с нормальной скоростью.</p></div>
+    <div class="lc"><div class="i">📓</div><h3>Поднять клон NotebookLM</h3><p>Локальный open-notebook: чат по своим документам, подкасты — данные не уходят в Google.</p></div>
+    <div class="lc"><div class="i">🔀</div><h3>Роутить модели и не переплачивать</h3><p>Каждую задачу — на самую дешёвую модель, что её вывезет. Экономия до 99%.</p></div>
+  </div>
+</div></section>
+
+<section id="tools"><div class="wrap">
+  <div class="h2">Что понадобится</div>
+  <div class="tools">
+    <a class="tool" href="https://ollama.com" target="_blank"><div class="ic">🦙</div><div><div class="nm">Ollama</div><div class="ds">движок локальных моделей</div></div><span class="pill">бесплатно</span></a>
+    <a class="tool" href="https://claude.ai/download" target="_blank"><div class="ic">✳️</div><div><div class="nm">Claude Desktop</div><div class="ds">управляет командами за тебя</div></div></a>
+    <a class="tool" href="https://github.com/lfnovo/open-notebook" target="_blank"><div class="ic">📓</div><div><div class="nm">open-notebook</div><div class="ds">клон NotebookLM (open source)</div></div><span class="pill">бесплатно</span></a>
+    <a class="tool" href="https://openrouter.ai" target="_blank"><div class="ic">🌐</div><div><div class="nm">OpenRouter</div><div class="ds">один ключ ко всем моделям</div></div></a>
+  </div>
+</div></section>
+
+<section id="steps"><div class="wrap">
+  <div class="h2">Пошагово</div>
+
+  <div class="step">
+    <div class="num">01</div><h3>Узнай потолок своего железа</h3>
+    <div class="desc">Чем больше оперативки — тем умнее модель ты запустишь. Сначала смотрим, что тянет твой ПК.</div>
+    <ul class="act">
+      <li>Жми: Пуск → Параметры → Система → О системе</li>
+      <li>Сделай скриншот (видно RAM, процессор, видюху)</li>
+      <li>Открой Claude Desktop, вставь скрин и спроси (промпт ниже)</li>
+    </ul>
+    <div class="pb"><div class="lbl"><span>💬 Промпт — какую модель запустить</span><button class="cp" onclick="cp(this)">Скопировать</button></div>
+      <div class="txt">Вот характеристики моего компа. Какую локальную модель мне лучше запустить, самую мощную, что пойдёт на этом железе с нормальной скоростью?</div></div>
+    <div class="tip"><b>Запас памяти:</b> если свободно 20 ГБ — не качай модель ровно на 20. Всегда оставляй буфер сверху. И лучше скачать пару моделей и попробовать, что зайдёт.</div>
+    <div class="mt">
+      <div class="r"><span>Твоя память</span><span>Запускай это</span><span>Размер</span></div>
+      <div class="r"><b>8 ГБ</b><span>Qwen3 8B — базовый чат</span><span>~5 ГБ</span></div>
+      <div class="r"><b>16 ГБ</b><span>Gemma 2 12B — зрение + чат</span><span>7.6 ГБ</span></div>
+      <div class="r sw"><b>24 ГБ</b><span>Qwen3.6 35B — сочная зона</span><span>24 ГБ</span></div>
+      <div class="r"><b>64 ГБ+</b><span>gpt-oss-120b</span><span>65 ГБ</span></div>
+      <div class="r"><b>256 ГБ+</b><span>GLM 5.2 / Qwen-Coder — фронтир</span><span>290 ГБ</span></div>
+    </div>
+    <div class="tip"><b>Окупаемость:</b> тратишь больше $200/мес на облачный ИИ — локальный комп окупается за 2-3 года, дальше ~$3/мес электричества. Железо — это вложение, а не трата.</div>
+  </div>
+
+  <div class="step">
+    <div class="num">02</div><h3>Поставь Ollama</h3>
+    <div class="desc">Это движок, на котором крутятся локальные модели. Самый простой и удобный вход.</div>
+    <ul class="act">
+      <li>Зайди на ollama.com → жми «Download Ollama» (или поставь командой)</li>
+      <li>Терминал (PowerShell) звучит страшно, но это просто чат-окно с компом — не парься</li>
+      <li>После установки открой приложение Ollama</li>
+    </ul>
+    <div class="pb cmd"><div class="lbl"><span>⌨️ Команда (PowerShell) — если ставишь через терминал</span><button class="cp" onclick="cp(this)">Скопировать</button></div>
+      <div class="txt">irm https://ollama.com/install.ps1 | iex</div></div>
+  </div>
+
+  <div class="step">
+    <div class="num">03</div><h3>Установи модель (через Claude Desktop)</h3>
+    <div class="desc">Можно поручить установку самому Claude — он выдаст готовую команду.</div>
+    <ul class="act"><li>Открой Claude Desktop, напиши промпт ниже</li><li>Claude выдаст команду — жми запустить (или вставь сам в терминал)</li></ul>
+    <div class="pb"><div class="lbl"><span>💬 Промпт — попросить команду установки</span><button class="cp" onclick="cp(this)">Скопировать</button></div>
+      <div class="txt">Хочу поставить локальную модель Gemma 2 9b для демонстрации. Дай команду, которую надо выполнить в терминале, чтобы её установить.</div></div>
+    <div class="pb cmd"><div class="lbl"><span>⌨️ Команда — что выдаст Claude</span><button class="cp" onclick="cp(this)">Скопировать</button></div>
+      <div class="txt">ollama pull gemma2:9b
+ollama run gemma2:9b</div></div>
+  </div>
+
+  <div class="step">
+    <div class="num">04</div><h3>Болтай с локальной моделью</h3>
+    <div class="desc">Модель скачалась — пользуйся. Работает на твоём ПК, без интернета, бесплатно.</div>
+    <ul class="act"><li>Открой приложение Ollama → выбери gemma2:9b в выпадающем списке</li><li>Пиши любой вопрос — отвечает локально, оффлайн, $0 за токен</li></ul>
+    <div class="tip"><b>Model-agnostic:</b> не привязывайся к одной компании. Бери лучшую модель под конкретную задачу.</div>
+  </div>
+
+  <div class="step">
+    <div class="num">05</div><h3>Лучшие модели на сегодня</h3>
+    <div class="desc">Что вообще есть в мире локальных и дешёвых моделей.</div>
+    <ul class="act">
+      <li><b>Gemma 2</b> — универсал от Google, зрение, под 16 ГБ</li>
+      <li><b>Qwen 3.6</b> — лучшая универсалка + агентный кодинг (24 ГБ)</li>
+      <li><b>gpt-oss</b> — компактный думатель</li>
+      <li><b>GLM 5.2</b> — король открытых, идёт вровень с Fable 5 (нужен сервер)</li>
+      <li><b>DeepSeek V4 Flash</b> — #1 на OpenRouter, ~$0.10 за 1М токенов, 190 ток/сек (дёшево + быстро)</li>
+    </ul>
+  </div>
+
+  <div class="step">
+    <div class="num">06</div><h3>Роутинг моделей — не переплачивай</h3>
+    <div class="desc">Бери лучшую модель под каждую задачу. DeepSeek V4 = 95% качества за 1% цены.</div>
+    <ul class="act">
+      <li>Чёрный труд в коде → <b>Codex</b></li>
+      <li>Длинный контекст → <b>Gemini</b></li>
+      <li>Дизайн / вкус → <b>Claude</b></li>
+      <li>Ресёрч и веб → <b>Perplexity</b></li>
+      <li>Приватное / конфиденциальное → <b>локалка</b></li>
+    </ul>
+    <div class="tip"><b>Лайфхак:</b> не выкатывай важное, пока не перепроверишь через другую модель (Codex / Gemini). Часто ловят косяк, который Claude пропустил. А через OpenRouter привязываешь один API-ключ и получаешь доступ почти ко всем моделям сразу.</div>
+  </div>
+
+  <div class="step">
+    <div class="num">07</div><h3>Подними локальный клон NotebookLM</h3>
+    <div class="desc">open-notebook — open source версия NotebookLM. Документы не уходят в Google, подключаешь любую модель.</div>
+    <ul class="act">
+      <li>Зайди на github.com/lfnovo/open-notebook</li>
+      <li>Жми зелёную кнопку «Code» → скопируй ссылку</li>
+      <li>Иди в Claude Desktop и попроси клонировать + запустить (промпт ниже)</li>
+      <li>Claude сам клонирует, ставит зависимости, поднимает базу и запускает — открой localhost</li>
+    </ul>
+    <div class="pb"><div class="lbl"><span>💬 Промпт — клон и запуск</span><button class="cp" onclick="cp(this)">Скопировать</button></div>
+      <div class="txt">Склонируй этот репозиторий, пожалуйста. Запусти его локально на localhost. Вот ссылка: https://github.com/lfnovo/open-notebook</div></div>
+  </div>
+
+  <div class="step">
+    <div class="num">08</div><h3>Подключи модель, источники и кастомизируй</h3>
+    <div class="desc">Цепляем свою локальную модель, грузим источники, чатим, меняем дизайн — всё через Claude.</div>
+    <ul class="act">
+      <li>Переключи модель в open-notebook (промпт ниже)</li>
+      <li>Если нет модели эмбеддинга — попроси Claude поставить её на Ollama</li>
+      <li>Источники → Создать → вставь URL (свой сайт / документ) → индексируется</li>
+      <li>Создай блокнот, добавь источник, задавай вопросы по нему. Можно сделать подкаст</li>
+    </ul>
+    <div class="pb"><div class="lbl"><span>💬 Промпт — сменить модель на свою</span><button class="cp" onclick="cp(this)">Скопировать</button></div>
+      <div class="txt">Слушай, дружище, можешь поменять мне модель на Gemma 2, которая у меня уже установлена. И установи какую-нибудь модель эмбеддинга на Ollama и загрузи это в open-notebook, чтобы текст правильно читался.</div></div>
+    <div class="pb"><div class="lbl"><span>💬 Промпт — поменять цвет интерфейса</span><button class="cp" onclick="cp(this)">Скопировать</button></div>
+      <div class="txt">Не нравится синий цвет. Замени его на жёлтый.</div></div>
+    <div class="tip"><b>Хочешь максимум качества?</b> Воткни API-ключ облачной модели (например Opus 4.8) — но и на локальной всё работает бесплатно.</div>
+  </div>
+
+</div></section>
+
+<section id="links"><div class="wrap">
+  <div class="h2">Все ссылки</div>
+  <div class="lg">
+    <a class="lk" href="https://ollama.com" target="_blank"><span class="ic">🦙</span><div><div class="nm">Ollama</div><div class="u">ollama.com</div></div></a>
+    <a class="lk" href="https://claude.ai/download" target="_blank"><span class="ic">✳️</span><div><div class="nm">Claude Desktop</div><div class="u">claude.ai/download</div></div></a>
+    <a class="lk" href="https://github.com/lfnovo/open-notebook" target="_blank"><span class="ic">📓</span><div><div class="nm">open-notebook</div><div class="u">github.com/lfnovo/open-notebook</div></div></a>
+    <a class="lk" href="https://openrouter.ai" target="_blank"><span class="ic">🌐</span><div><div class="nm">OpenRouter</div><div class="u">openrouter.ai</div></div></a>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="cta">
+    <h2>Первые <span class="g">$1000</span> на ИИ — бесплатный интенсив</h2>
+    <div class="two">
+      <div><h4>Внутри</h4>
+        <li>✅ Реальное демо вживую</li>
+        <li>✅ Софт, который за 5 минут находит компании без сайтов с готовыми контактами</li>
+        <li>✅ Кейсы учеников: <b>$10 000</b> за 3 проекта без команды</li>
+      </div>
+      <div><h4>Два бонуса в конце</h4>
+        <li>💰 50 скучных и самых прибыльных ниш без конкуренции</li>
+        <li>🚀 Чек-лист: первые <b>$1000</b> за 7 дней</li>
+      </div>
+    </div>
+    <div class="bot">
+      <div class="free"><b>Бесплатно.</b> Навсегда.</div>
+      <a class="go" href="https://t.me/IntensivMastaBot" target="_blank">Забрать интенсив →</a>
+    </div>
+  </div>
+</div></section>
+
+<footer>
+  <div class="b"><span>МАСТОДОНТ</span></div>
+  <p>AI и нейросети - просто, по делу</p>
+  <a href="https://youtu.be/qCGPtt6J4Vc" target="_blank">▶ Смотреть видео на YouTube</a>
+</footer>
+
+<script>
+function cp(b){const t=b.closest('.pb').querySelector('.txt').innerText;navigator.clipboard.writeText(t).then(()=>{const o=b.textContent;b.textContent='✓ Скопировано!';b.classList.add('ok');setTimeout(()=>{b.textContent=o;b.classList.remove('ok')},2000)})}
+</script>
+</body></html>
